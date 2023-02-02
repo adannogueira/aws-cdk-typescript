@@ -7,13 +7,5 @@ import { Construct } from 'constructs';
 export class CdkTypescriptStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-
-    const queue = new sqs.Queue(this, 'CdkTypescriptQueue', {
-      visibilityTimeout: Duration.seconds(300)
-    });
-
-    const topic = new sns.Topic(this, 'CdkTypescriptTopic');
-
-    topic.addSubscription(new subs.SqsSubscription(queue));
   }
 }
