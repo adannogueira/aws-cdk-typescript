@@ -9,4 +9,9 @@ describe('hello()', () => {
     const response = await hello(event);
     expect(response.body).toMatch(/any\/path/);
   });
+
+  it('Should return an object containing statusCode 200', async () => {
+    const response = await hello({} as LambdaEvent);
+    expect(response.statusCode).toBe(200);
+  });
 })
