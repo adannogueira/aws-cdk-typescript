@@ -7,11 +7,14 @@ import path = require('path');
 export class CdkTypescriptStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+    this.initializeLambda();
+  }
 
+  private initializeLambda() {
     new NodejsFunction(this, 'HelloHandler', {
       runtime: Runtime.NODEJS_14_X,
       entry: path.join(__dirname, `/../lambda/handler.ts`),
       handler: 'hello'
-    })
+    });
   }
 }
