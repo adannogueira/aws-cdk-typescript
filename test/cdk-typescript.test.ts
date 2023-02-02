@@ -1,17 +1,18 @@
 import * as cdk from 'aws-cdk-lib';
-import { Template, Match } from 'aws-cdk-lib/assertions';
+import { Template } from 'aws-cdk-lib/assertions';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import * as CdkTypescript from '../lib/cdk-typescript-stack';
 
-test('SQS Queue and SNS Topic Created', () => {
-  const app = new cdk.App();
-  // WHEN
-  const stack = new CdkTypescript.CdkTypescriptStack(app, 'MyTestStack');
-  // THEN
-
-  const template = Template.fromStack(stack);
-
-  template.hasResourceProperties('AWS::SQS::Queue', {
-    VisibilityTimeout: 300
+describe('Lambda Function', () => {
+  it('Should create handler correctly', () => {
+    const app = new cdk.App();
+  
+    const stack = new CdkTypescript.CdkTypescriptStack(app, 'MyTestStack');
+    const template = Template.fromStack(stack);
+  
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Handler: 'index.hello',
+      Runtime: Runtime.NODEJS_14_X.name
+    });
   });
-  template.resourceCountIs('AWS::SNS::Topic', 1);
-});
+})
