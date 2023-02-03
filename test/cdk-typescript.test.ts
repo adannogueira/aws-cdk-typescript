@@ -16,3 +16,21 @@ describe('Lambda Function', () => {
     });
   });
 })
+
+describe('API Gateway', () => {
+  it('Should create rest API correctly', () => {
+    const app = new cdk.App();
+  
+    const stack = new CdkTypescript.CdkTypescriptStack(app, 'MyTestStack');
+    const template = Template.fromStack(stack);
+  
+    template.resourceCountIs('AWS::ApiGateway::Deployment', 1);
+    template.hasResourceProperties('AWS::ApiGateway::RestApi', {
+      Name: 'Endpoint',
+    });
+    template.hasResourceProperties('AWS::ApiGateway::Method', {
+      HttpMethod: 'ANY',
+      Integration: { TimeoutInMillis: 2000 }
+    });
+  });
+})
