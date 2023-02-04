@@ -11,6 +11,7 @@ export interface HitCounterProps {
 
 export class HitCounterConstruct extends Construct {
   public readonly handler: NodejsFunction;
+  private readonly table: Table;
 
   constructor (
     scope: Construct,
@@ -18,25 +19,29 @@ export class HitCounterConstruct extends Construct {
     private props: HitCounterProps
   ) {
     super(scope, id);
-    const table = this.initializeDatabase();
-    this.handler = this.initializeLambda(table);
-    table.grantReadWriteData(this.handler);
-    props.downstream.grantInvoke(this.handler);
+    this.table = this.initializeDatabase();
+    this.handler = this.initializeLambda();
+    this.setPermissions();
   }
 
   private initializeDatabase(): Table {
     return new Database(this, 'Database').db;
   }
 
-  private initializeLambda(table: Table): NodejsFunction {
+  private initializeLambda(): NodejsFunction {
     return new NodejsFunction(this, 'HitCounterHandler', {
       runtime: Runtime.NODEJS_14_X,
       entry: join(__dirname, `/../lambda/hit-counter.ts`),
       handler: 'hitCounter',
       environment: {
         DOWNSTREAM_FUNCTION_NAME: this.props.downstream.functionName,
-        HITS_TABLE_NAME: table.tableName
+        HITS_TABLE_NAME: this.table.tableName
       }
     });
+  }
+
+  private setPermissions(): void {
+    this.table.grantReadWriteData(this.handler);
+    this.props.downstream.grantInvoke(this.handler);
   }
 }
