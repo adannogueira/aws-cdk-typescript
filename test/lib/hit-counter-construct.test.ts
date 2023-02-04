@@ -44,6 +44,20 @@ describe('HitCounterConstruct', () => {
       }
     });
   });
+
+  it('Should grant HitCounter function permission to invoke downstream function', () => {
+    const template = makeSut();
+    template.hasResourceProperties('AWS::IAM::Policy', {
+      PolicyDocument: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Effect: 'Allow',
+            Action: 'lambda:InvokeFunction'
+          })
+        ])
+      }
+    });
+  });
 });
 
 const makeSut = () => {

@@ -21,6 +21,7 @@ export class HitCounterConstruct extends Construct {
     const table = this.initializeDatabase();
     this.handler = this.initializeLambda(table);
     table.grantReadWriteData(this.handler);
+    props.downstream.grantInvoke(this.handler);
   }
 
   private initializeDatabase(): Table {
