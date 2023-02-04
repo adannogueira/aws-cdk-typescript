@@ -5,28 +5,12 @@ import { HitCounterConstruct } from '../../lib/hit-counter-construct';
 
 describe('HitCounterConstruct', () => {
   it('Should create DynamoDB Table', () => {
-    const stack = new Stack();
-    new HitCounterConstruct(stack, 'TestConstruct', {
-      downstream: new Function(stack, 'TestFunction', {
-        runtime: Runtime.NODEJS_14_X,
-        code: Code.fromAsset('lambda'),
-        handler: 'hello'
-      })
-    });
-    const template = Template.fromStack(stack);
+    const template = makeSut();
     template.resourceCountIs('AWS::DynamoDB::Table', 1);
   });
 
   it('Should pass environment variables to lambda function', () => {
-    const stack = new Stack();
-    new HitCounterConstruct(stack, 'TestConstruct', {
-      downstream: new Function(stack, 'TestFunction', {
-        runtime: Runtime.NODEJS_14_X,
-        code: Code.fromAsset('lambda'),
-        handler: 'hello'
-      })
-    });
-    const template = Template.fromStack(stack);
+    const template = makeSut();
     const envCapture = new Capture();
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: envCapture
@@ -44,3 +28,17 @@ describe('HitCounterConstruct', () => {
     });
   });
 });
+
+const makeSut = () => {
+  const stack = new Stack();
+  const lambda = new Function(stack, 'TestFunction', {
+    runtime: Runtime.NODEJS_14_X,
+    code: Code.fromAsset('lambda'),
+    handler: 'hello'
+  });
+  new HitCounterConstruct(stack, 'TestConstruct', {
+    downstream: lambda
+  });
+  const template = Template.fromStack(stack);
+  return template;
+}
