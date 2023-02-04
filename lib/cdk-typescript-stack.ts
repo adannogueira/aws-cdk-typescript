@@ -4,12 +4,14 @@ import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import path = require('path');
+import { HitCounterConstruct } from './hit-counter-construct';
 
 export class CdkTypescriptStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
     const lambdaHandler = this.initializeLambda();
-    this.initializeApiGateway(lambdaHandler);
+    const hitCounter = this.initializeHitCounter(lambdaHandler);
+    this.initializeApiGateway(hitCounter.handler);
   }
 
   private initializeLambda(): NodejsFunction {
@@ -18,6 +20,15 @@ export class CdkTypescriptStack extends Stack {
       entry: path.join(__dirname, `/../lambda/hello.ts`),
       handler: 'hello'
     });
+  }
+
+  private initializeHitCounter(
+    downstream: NodejsFunction
+  ): HitCounterConstruct {
+    const hitCounter = new HitCounterConstruct(this, 'HelloHitCounter', {
+      downstream
+    });
+    return hitCounter;
   }
 
   private initializeApiGateway(handler: NodejsFunction): void {
