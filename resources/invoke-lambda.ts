@@ -12,5 +12,5 @@ export const invokeLambda = async (
       Payload: JSON.stringify(payload)
     })
     .promise()
-  return JSON.stringify(response.Payload);
+  return response.Payload as string;
 }
