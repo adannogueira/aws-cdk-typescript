@@ -4,7 +4,6 @@ import { Construct } from 'constructs';
 
 export class Database extends Construct {
   public readonly db: Table;
-  private readonly dynamo = new DynamoDB();
 
   constructor (scope: Construct, id: string) {
     super(scope, id);
@@ -14,4 +13,14 @@ export class Database extends Construct {
       encryption: TableEncryption.AWS_MANAGED
     });
   }
+}
+
+export const increaseDbCountFor = async (endpoint: string): Promise<void> => {
+  const dynamo = new DynamoDB();
+  await dynamo.updateItem({
+    TableName: 'some_table',
+    Key: { path: { S: endpoint } },
+    UpdateExpression: 'ADD hits :incr',
+    ExpressionAttributeValues: { ':incr' : { N: '1' } }
+  }).promise()
 }
