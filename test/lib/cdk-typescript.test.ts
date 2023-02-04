@@ -1,7 +1,8 @@
 import { App } from 'aws-cdk-lib';
 import { Capture, Template } from 'aws-cdk-lib/assertions';
-import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { CdkTypescriptStack } from '../../lib/cdk-typescript-stack';
+import { TableViewer } from 'cdk-dynamo-table-viewer';
+jest.mock('cdk-dynamo-table-viewer');
 
 describe('CdkStack', () => {
   it('Should create lambda handlers correctly', () => {
@@ -28,6 +29,11 @@ describe('CdkStack', () => {
       HttpMethod: 'ANY',
       Integration: { TimeoutInMillis: 2000 }
     });
+  });
+
+  it('Should call TableViewer on class construction', () => {
+    makeSut();
+    expect(TableViewer).toHaveBeenCalled();
   });
 });
 

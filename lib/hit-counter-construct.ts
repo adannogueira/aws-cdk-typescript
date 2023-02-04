@@ -11,7 +11,7 @@ export interface HitCounterProps {
 
 export class HitCounterConstruct extends Construct {
   public readonly handler: NodejsFunction;
-  private readonly table: Table;
+  public readonly table: Table;
 
   constructor (
     scope: Construct,
