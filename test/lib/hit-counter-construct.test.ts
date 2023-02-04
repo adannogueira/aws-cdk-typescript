@@ -27,6 +27,21 @@ describe('HitCounterConstruct', () => {
       }
     });
   });
+
+  it('Should grant HitCounter function Table read/write access', () => {
+    const template = makeSut();
+    const policyCapture = new Capture();
+    template.hasResourceProperties('AWS::IAM::Policy', {
+      PolicyDocument: { Statement: policyCapture }
+    });
+    expect(policyCapture.asArray()).toMatchObject([{
+      Effect: 'Allow',
+      Action: expect.arrayContaining([
+        'dynamodb:PutItem',
+        'dynamodb:GetItem'
+      ])
+    }])
+  });
 });
 
 const makeSut = () => {
