@@ -1,5 +1,5 @@
 import { Stack } from 'aws-cdk-lib';
-import { Capture, Template } from 'aws-cdk-lib/assertions';
+import { Capture, Match, Template } from 'aws-cdk-lib/assertions';
 import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { HitCounterConstruct } from '../../lib/hit-counter-construct';
 
@@ -30,17 +30,19 @@ describe('HitCounterConstruct', () => {
 
   it('Should grant HitCounter function Table read/write access', () => {
     const template = makeSut();
-    const policyCapture = new Capture();
     template.hasResourceProperties('AWS::IAM::Policy', {
-      PolicyDocument: { Statement: policyCapture }
+      PolicyDocument: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Effect: 'Allow',
+            Action: Match.arrayWith([
+              'dynamodb:GetItem',
+              'dynamodb:PutItem'
+            ])
+          })
+        ])
+      }
     });
-    expect(policyCapture.asArray()).toMatchObject([{
-      Effect: 'Allow',
-      Action: expect.arrayContaining([
-        'dynamodb:PutItem',
-        'dynamodb:GetItem'
-      ])
-    }])
   });
 });
 
