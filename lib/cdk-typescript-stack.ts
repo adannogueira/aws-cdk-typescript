@@ -21,7 +21,9 @@ export class CdkTypescriptStack extends Stack {
     return new NodejsFunction(this, 'HelloHandler', {
       runtime: Runtime.NODEJS_14_X,
       entry: path.join(__dirname, `/../lambda/hello.ts`),
-      handler: 'hello'
+      handler: 'hello',
+      timeout: Duration.seconds(4),
+      memorySize: 128
     });
   }
 
@@ -38,7 +40,7 @@ export class CdkTypescriptStack extends Stack {
     new LambdaRestApi(this, 'Endpoint', {
       handler,
       integrationOptions: {
-        timeout: Duration.seconds(2)
+        timeout: Duration.seconds(5)
       }
     });
   }
@@ -46,6 +48,7 @@ export class CdkTypescriptStack extends Stack {
   private initializeTableViewer(table: Table): void {
     new TableViewer(this, 'ViewHitCounter', {
       title: 'Hello Hits',
+      sortBy: '-hits',
       table
     });
   }

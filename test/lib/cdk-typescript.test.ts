@@ -11,6 +11,8 @@ describe('CdkStack', () => {
     sut.resourceCountIs('AWS::Lambda::Function', 2);
     sut.hasResourceProperties('AWS::Lambda::Function', {
       Handler: handlerCapture,
+      Timeout: 4,
+      MemorySize: 128
     });
     expect(handlerCapture._captured).toEqual([
       'index.hello',
@@ -33,7 +35,7 @@ describe('CdkStack', () => {
 
   it('Should call TableViewer on class construction', () => {
     makeSut();
-    expect(TableViewer).toHaveBeenCalled();
+    expect(TableViewer).toHaveBeenCalledWith({});
   });
 });
 
