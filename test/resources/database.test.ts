@@ -9,14 +9,21 @@ describe('Database', () => {
   });
 
   it('Should create a DynamoDB table', () => {
-    const { stack } = buildResources();
-    const template = Template.fromStack(stack);
+    const { template } = buildResources();
     template.resourceCountIs('AWS::DynamoDB::Table', 1);
+  });
+
+  it('Should encrypt DynamoDB table', () => {
+    const { template } = buildResources();
+    template.hasResourceProperties('AWS::DynamoDB::Table', {
+      SSESpecification: { SSEEnabled: true }
+    });
   });
 });
 
 const buildResources = () => {
   const stack = new Stack();
   const database = new Database(stack, 'MyDatabase');
-  return { stack, database };
+  const template = Template.fromStack(stack);
+  return { template, database };
 }
