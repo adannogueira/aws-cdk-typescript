@@ -15,7 +15,7 @@ export class CdkTypescriptStack extends Stack {
   private initializeLambda(): NodejsFunction {
     return new NodejsFunction(this, 'HelloHandler', {
       runtime: Runtime.NODEJS_14_X,
-      entry: path.join(__dirname, `/../lambda/handler.ts`),
+      entry: path.join(__dirname, `/../lambda/hello.ts`),
       handler: 'hello'
     });
   }

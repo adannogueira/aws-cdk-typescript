@@ -1,7 +1,7 @@
 import { App } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
-import { CdkTypescriptStack } from '../lib/cdk-typescript-stack';
+import { CdkTypescriptStack } from '../../lib/cdk-typescript-stack';
 
 describe('Lambda Function', () => {
   it('Should create handler correctly', () => {

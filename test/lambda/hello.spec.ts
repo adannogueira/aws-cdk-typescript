@@ -1,5 +1,5 @@
-import { LambdaEvent } from '../interfaces/lambda-interfaces';
-import { hello } from './handler'
+import { LambdaEvent } from '../../interfaces/lambda-interfaces';
+import { hello } from '../../lambda/hello'
 
 describe('hello()', () => {
   it('Should return an object containing a body with the path', async () => {
