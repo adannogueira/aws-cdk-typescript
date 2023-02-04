@@ -19,6 +19,13 @@ describe('Database', () => {
       SSESpecification: { SSEEnabled: true }
     });
   });
+
+  it('Should destroy DynamoDB table on stack deletion', () => {
+    const { template } = buildResources();
+    template.hasResource('AWS::DynamoDB::Table', {
+      DeletionPolicy: 'Delete'
+    });
+  });
 });
 
 const buildResources = () => {

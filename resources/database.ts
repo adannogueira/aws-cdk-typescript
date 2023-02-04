@@ -1,3 +1,4 @@
+import { RemovalPolicy } from 'aws-cdk-lib';
 import { AttributeType, Table, TableEncryption } from 'aws-cdk-lib/aws-dynamodb';
 import { DynamoDB } from 'aws-sdk';
 import { Construct } from 'constructs';
@@ -10,7 +11,8 @@ export class Database extends Construct {
 
     this.db = new Table(this, 'Hits', {
       partitionKey: { name: 'path', type: AttributeType.STRING },
-      encryption: TableEncryption.AWS_MANAGED
+      encryption: TableEncryption.AWS_MANAGED,
+      removalPolicy: RemovalPolicy.DESTROY
     });
   }
 }
