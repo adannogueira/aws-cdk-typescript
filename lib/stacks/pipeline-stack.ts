@@ -72,8 +72,8 @@ export class PipelineStack extends Stack {
         },
         commands: [
           'curl -Ssf $ENDPOINT_URL',
-          'surl -Ssf $ENDPOINT_URL/hello',
-          'surl -Ssf $ENDPOINT_URL/test'
+          'curl -Ssf $ENDPOINT_URL/hello',
+          'curl -Ssf $ENDPOINT_URL/test'
         ]
       })
     );
