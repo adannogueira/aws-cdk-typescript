@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 import * as dotenv from 'dotenv'
 import * as cdk from 'aws-cdk-lib';
-import { CdkTypescriptStack } from '../lib/cdk-typescript-stack';
+import { PipelineStack } from '../lib/pipeline-stack';
 
 dotenv.config()
 
 const app = new cdk.App();
-new CdkTypescriptStack(app, 'CdkTypescriptStack', {
+new PipelineStack(app, 'PipelineStack', {
   env: {
     account: process.env.ACCOUNT,
     region: process.env.REGION
