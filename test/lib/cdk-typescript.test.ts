@@ -17,7 +17,7 @@ describe('CdkStack', () => {
     sut.resourceCountIs('AWS::Lambda::Function', 2);
     sut.hasResourceProperties('AWS::Lambda::Function', {
       Handler: handlerCapture,
-      Timeout: 4,
+      Timeout: 10,
       MemorySize: 128
     });
     expect(handlerCapture._captured).toEqual([
@@ -35,7 +35,7 @@ describe('CdkStack', () => {
     });
     sut.hasResourceProperties('AWS::ApiGateway::Method', {
       HttpMethod: 'ANY',
-      Integration: { TimeoutInMillis: 5000 }
+      Integration: { TimeoutInMillis: 10000 }
     });
   });
 

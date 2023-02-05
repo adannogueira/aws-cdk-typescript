@@ -25,7 +25,7 @@ export class CdkTypescriptStack extends Stack {
       runtime: Runtime.NODEJS_14_X,
       entry: join(__dirname, `/../../lambda/hello.ts`),
       handler: 'hello',
-      timeout: Duration.seconds(4),
+      timeout: Duration.seconds(10),
       memorySize: 128
     });
   }
@@ -43,7 +43,7 @@ export class CdkTypescriptStack extends Stack {
     const gateway = new LambdaRestApi(this, 'Endpoint', {
       handler,
       integrationOptions: {
-        timeout: Duration.seconds(5)
+        timeout: Duration.seconds(10)
       }
     });
     return new CfnOutput(this, 'GatewayUrl', { value: gateway.url })
