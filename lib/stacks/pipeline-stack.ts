@@ -47,6 +47,7 @@ export class PipelineStack extends Stack {
     stage.addPre(
       new CodeBuildStep('TestUnit', {
         projectName: 'UnitTesting',
+        installCommands: ['npm install'],
         commands: ['npm test']
       })
     );
