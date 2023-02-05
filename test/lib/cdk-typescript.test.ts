@@ -1,8 +1,14 @@
 import { App } from 'aws-cdk-lib';
 import { Capture, Template } from 'aws-cdk-lib/assertions';
 import { CdkTypescriptStack } from '../../lib/stacks/cdk-typescript-stack';
-import { TableViewer } from 'cdk-dynamo-table-viewer';
-jest.mock('cdk-dynamo-table-viewer');
+import * as TableViewer from 'cdk-dynamo-table-viewer';
+jest.mock('cdk-dynamo-table-viewer', () => {
+  return {
+    TableViewer: jest.fn().mockImplementation(() => ({
+      endpoint: 'any'
+    }))
+  }
+});
 
 describe('CdkStack', () => {
   it('Should create lambda handlers correctly', () => {
@@ -35,7 +41,16 @@ describe('CdkStack', () => {
 
   it('Should call TableViewer on class construction', () => {
     makeSut();
-    expect(TableViewer).toHaveBeenCalled();
+    const tableViewerSpy = jest.spyOn(TableViewer, 'TableViewer');
+    expect(tableViewerSpy).toHaveBeenCalled();
+  });
+  
+  it('Should add CfnOutput for both app endpoints', () => {
+    jest.restoreAllMocks()
+    const sut = makeSut();
+  
+    sut.findOutputs('GatewayUrl');
+    sut.findOutputs('TableViewerUrl');
   });
 });
 
