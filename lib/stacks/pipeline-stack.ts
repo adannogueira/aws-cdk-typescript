@@ -2,12 +2,14 @@ import { Stack, StackProps } from 'aws-cdk-lib';
 import { Repository } from 'aws-cdk-lib/aws-codecommit';
 import { CodeBuildStep, CodePipeline, CodePipelineSource } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
+import { PipelineStage } from '../stages/pipeline-stage';
 
 export class PipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
     const repository = this.createRepository();
-    this.createPipeline(repository);
+    const pipeline = this.createPipeline(repository);
+    this.deploy(pipeline);
   }
 
   private createRepository(): Repository {
@@ -16,8 +18,8 @@ export class PipelineStack extends Stack {
     });
   }
 
-  private createPipeline(repository: Repository): void {
-    new CodePipeline(this, 'Pipeline', {
+  private createPipeline(repository: Repository): CodePipeline {
+    return new CodePipeline(this, 'Pipeline', {
       pipelineName: 'BasicPipeline',
       crossAccountKeys: false,
       synth: new CodeBuildStep('SynthStep', {
@@ -30,5 +32,10 @@ export class PipelineStack extends Stack {
         ]
       })
     });
+  }
+
+  private deploy(pipeline: CodePipeline): void {
+    const deploy = new PipelineStage(this, 'Deploy');
+    pipeline.addStage(deploy);
   }
 }
