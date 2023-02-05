@@ -6,11 +6,17 @@ import { Construct } from 'constructs';
 export class PipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+    const repository = this.createRepository();
+    this.createPipeline(repository);
+  }
 
-    const repository = new Repository(this, 'TypescriptRepo', {
+  private createRepository(): Repository {
+    return new Repository(this, 'TypescriptRepo', {
       repositoryName: 'TypescriptRepo'
     });
+  }
 
+  private createPipeline(repository: Repository): void {
     new CodePipeline(this, 'Pipeline', {
       pipelineName: 'BasicPipeline',
       crossAccountKeys: false,
