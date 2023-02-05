@@ -32,7 +32,7 @@ export class HitCounterConstruct extends Construct {
   private initializeLambda(): NodejsFunction {
     return new NodejsFunction(this, 'HitCounterHandler', {
       runtime: Runtime.NODEJS_14_X,
-      entry: join(__dirname, `/../lambda/hit-counter.ts`),
+      entry: join(__dirname, `/../../lambda/hit-counter.ts`),
       handler: 'hitCounter',
       timeout: Duration.seconds(4),
       memorySize: 128,

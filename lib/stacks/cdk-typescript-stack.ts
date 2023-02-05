@@ -20,7 +20,7 @@ export class CdkTypescriptStack extends Stack {
   private initializeLambda(): NodejsFunction {
     return new NodejsFunction(this, 'HelloHandler', {
       runtime: Runtime.NODEJS_14_X,
-      entry: join(__dirname, `/../lambda/hello.ts`),
+      entry: join(__dirname, `/../../lambda/hello.ts`),
       handler: 'hello',
       timeout: Duration.seconds(4),
       memorySize: 128
