@@ -37,7 +37,19 @@ export class PipelineStack extends Stack {
   private addStage(pipeline: CodePipeline): void {
     const deploy = new DeployStage(this, 'Deploy');
     const stage = pipeline.addStage(deploy);
+    this.addPreDeploymentStepsToStage(deploy, stage);
     this.addPostDeploymentStepsToStage(deploy, stage);
+  }
+
+  private addPreDeploymentStepsToStage(deploy: DeployStage,
+    stage: StageDeployment
+  ): void {
+    stage.addPre(
+      new CodeBuildStep('TestUnit', {
+        projectName: 'UnitTesting',
+        commands: ['npm test']
+      })
+    );
   }
 
   private addPostDeploymentStepsToStage (
@@ -63,6 +75,6 @@ export class PipelineStack extends Stack {
           'surl -Ssf $ENDPOINT_URL/test'
         ]
       })
-    )
+    );
   }
 }
