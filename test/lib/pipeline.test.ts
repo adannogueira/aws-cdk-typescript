@@ -42,4 +42,20 @@ describe('PipelineStack', () => {
       ])
     });
   });
+
+  it('Should add post deploy stages to CodeCommit pipeline', () => {
+    const app = new App();
+    const stack = new PipelineStack(app, 'MyTestStack');
+    const template = Template.fromStack(stack);
+    template.hasResourceProperties('AWS::CodePipeline::Pipeline', {
+      Stages: Match.arrayWith([
+        Match.objectLike({
+          Actions: Match.arrayWith([
+            Match.objectLike({ Name: 'TestAPIGatewayEndpoint' }),
+            Match.objectLike({ Name: 'TestViewerEndpoint' })
+          ])
+        })
+      ])
+    });
+  });
 });

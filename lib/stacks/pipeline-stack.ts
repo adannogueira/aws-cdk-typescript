@@ -1,15 +1,15 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Repository } from 'aws-cdk-lib/aws-codecommit';
-import { CodeBuildStep, CodePipeline, CodePipelineSource } from 'aws-cdk-lib/pipelines';
+import { CodeBuildStep, CodePipeline, CodePipelineSource, StageDeployment } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
-import { PipelineStage } from '../stages/pipeline-stage';
+import { DeployStage } from '../stages/deploy-stage';
 
 export class PipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
     const repository = this.createRepository();
     const pipeline = this.createPipeline(repository);
-    this.deploy(pipeline);
+    this.addStage(pipeline);
   }
 
   private createRepository(): Repository {
@@ -34,8 +34,35 @@ export class PipelineStack extends Stack {
     });
   }
 
-  private deploy(pipeline: CodePipeline): void {
-    const deploy = new PipelineStage(this, 'Deploy');
-    pipeline.addStage(deploy);
+  private addStage(pipeline: CodePipeline): void {
+    const deploy = new DeployStage(this, 'Deploy');
+    const stage = pipeline.addStage(deploy);
+    this.addPostDeploymentStepsToStage(deploy, stage);
+  }
+
+  private addPostDeploymentStepsToStage (
+    deploy: DeployStage,
+    stage: StageDeployment
+  ): void {
+    stage.addPost(
+      new CodeBuildStep('TestViewerEndpoint', {
+        projectName: 'TestViewerEndpoint',
+        envFromCfnOutputs: {
+          ENDPOINT_URL: deploy.hitCounterViewerUrl
+        },
+        commands: ['curl -Ssf $ENDPOINT_URL']
+      }),
+      new CodeBuildStep('TestAPIGatewayEndpoint', {
+        projectName: 'TestAPIGatewayEndpoint',
+        envFromCfnOutputs: {
+          ENDPOINT_URL: deploy.hitCounterEndpoint
+        },
+        commands: [
+          'curl -Ssf $ENDPOINT_URL',
+          'surl -Ssf $ENDPOINT_URL/hello',
+          'surl -Ssf $ENDPOINT_URL/test'
+        ]
+      })
+    )
   }
 }
