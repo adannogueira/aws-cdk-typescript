@@ -4,7 +4,7 @@ import { IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import { join } from 'path';
-import { Database } from '../resources/database';
+import { DatabaseConstruct } from './database-construct';
 
 export interface HitCounterProps {
   downstream: IFunction;
@@ -26,7 +26,7 @@ export class HitCounterConstruct extends Construct {
   }
 
   private initializeDatabase(): Table {
-    return new Database(this, 'Database').db;
+    return new DatabaseConstruct(this, 'Database').db;
   }
 
   private initializeLambda(): NodejsFunction {

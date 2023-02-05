@@ -1,7 +1,7 @@
 import { Stack } from 'aws-cdk-lib';
 import { Capture, Match, Template } from 'aws-cdk-lib/assertions';
 import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
-import { HitCounterConstruct } from '../../lib/hit-counter-construct';
+import { HitCounterConstruct } from '../../lib/constructs/hit-counter-construct';
 
 describe('HitCounterConstruct', () => {
   it('Should create DynamoDB Table', () => {

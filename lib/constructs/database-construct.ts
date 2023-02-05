@@ -2,7 +2,7 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { AttributeType, Table, TableEncryption } from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
 
-export class Database extends Construct {
+export class DatabaseConstruct extends Construct {
   public readonly db: Table;
 
   constructor (scope: Construct, id: string) {

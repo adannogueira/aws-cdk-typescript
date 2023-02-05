@@ -5,8 +5,8 @@ import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { TableViewer } from 'cdk-dynamo-table-viewer';
 import { Construct } from 'constructs';
-import path = require('path');
-import { HitCounterConstruct } from './hit-counter-construct';
+import { join } from 'path';
+import { HitCounterConstruct } from '../constructs/hit-counter-construct';
 
 export class CdkTypescriptStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -20,7 +20,7 @@ export class CdkTypescriptStack extends Stack {
   private initializeLambda(): NodejsFunction {
     return new NodejsFunction(this, 'HelloHandler', {
       runtime: Runtime.NODEJS_14_X,
-      entry: path.join(__dirname, `/../lambda/hello.ts`),
+      entry: join(__dirname, `/../lambda/hello.ts`),
       handler: 'hello',
       timeout: Duration.seconds(4),
       memorySize: 128

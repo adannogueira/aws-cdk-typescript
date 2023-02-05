@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import * as dotenv from 'dotenv'
 import * as cdk from 'aws-cdk-lib';
-import { PipelineStack } from '../lib/pipeline-stack';
+import { PipelineStack } from '../lib/stacks/pipeline-stack';
 
 dotenv.config()
 

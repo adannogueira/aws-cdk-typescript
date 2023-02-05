@@ -1,6 +1,6 @@
 import { App } from 'aws-cdk-lib';
 import { Capture, Template } from 'aws-cdk-lib/assertions';
-import { CdkTypescriptStack } from '../../lib/cdk-typescript-stack';
+import { CdkTypescriptStack } from '../../lib/stacks/cdk-typescript-stack';
 import { TableViewer } from 'cdk-dynamo-table-viewer';
 jest.mock('cdk-dynamo-table-viewer');
 

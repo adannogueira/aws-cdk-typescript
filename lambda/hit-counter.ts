@@ -1,5 +1,5 @@
 import { LambdaEvent, LambdaResponse } from '../interfaces/lambda-interfaces';
-import { increaseDbCountFor } from '../resources/database';
+import { increaseDbCountFor } from '../resources/dynamo-utils';
 import { invokeLambda } from '../resources/invoke-lambda';
 
 export const hitCounter = async (event: LambdaEvent): Promise<LambdaResponse> => {
