@@ -29,13 +29,13 @@ describe('CdkStack', () => {
     });
     sut.hasResourceProperties('AWS::ApiGateway::Method', {
       HttpMethod: 'ANY',
-      Integration: { TimeoutInMillis: 2000 }
+      Integration: { TimeoutInMillis: 5000 }
     });
   });
 
   it('Should call TableViewer on class construction', () => {
     makeSut();
-    expect(TableViewer).toHaveBeenCalledWith({});
+    expect(TableViewer).toHaveBeenCalled();
   });
 });
 

@@ -9,4 +9,4 @@ export const hitCounter = async (event: LambdaEvent): Promise<LambdaResponse> =>
     event
   );
   return JSON.parse(response);
-}
+};
