@@ -4,16 +4,18 @@ import { PipelineStack } from '../../lib/stacks/pipeline-stack';
 
 describe('PipelineStack', () => {
   it('Should create CodeCommit Repository correctly', () => {
-    const app = new App();
-    const stack = new PipelineStack(app, 'MyTestStack');
-    const template = Template.fromStack(stack);
+    // Arrange & Act
+    const template = makeSut();
+
+    // Assert
     template.resourceCountIs('AWS::CodeCommit::Repository', 1);
   });
 
   it('Should grant permission and create a pipeline correctly', () => {
-    const app = new App();
-    const stack = new PipelineStack(app, 'MyTestStack');
-    const template = Template.fromStack(stack);
+    // Arrange & Act
+    const template = makeSut();
+
+    // Assert
     template.resourceCountIs('AWS::CodePipeline::Pipeline', 1);
     template.hasResourceProperties('AWS::CodeBuild::Project', {
       Source: {
@@ -29,13 +31,14 @@ describe('PipelineStack', () => {
           })
         ])
       }
-    })
+    });
   });
 
   it('Should add deploy stage to CodeCommit pipeline', () => {
-    const app = new App();
-    const stack = new PipelineStack(app, 'MyTestStack');
-    const template = Template.fromStack(stack);
+    // Arrange & Act
+    const template = makeSut();
+
+    // Assert
     template.hasResourceProperties('AWS::CodePipeline::Pipeline', {
       Stages: Match.arrayWith([
         Match.objectLike({ Name: 'Deploy' })
@@ -44,9 +47,10 @@ describe('PipelineStack', () => {
   });
 
   it('Should add pre deploy stages to CodeCommit pipeline', () => {
-    const app = new App();
-    const stack = new PipelineStack(app, 'MyTestStack');
-    const template = Template.fromStack(stack);
+    // Arrange & Act
+    const template = makeSut();
+
+    // Assert
     template.hasResourceProperties('AWS::CodePipeline::Pipeline', {
       Stages: Match.arrayWith([
         Match.objectLike({
@@ -59,9 +63,10 @@ describe('PipelineStack', () => {
   });
 
   it('Should add post deploy stages to CodeCommit pipeline', () => {
-    const app = new App();
-    const stack = new PipelineStack(app, 'MyTestStack');
-    const template = Template.fromStack(stack);
+    // Arrange & Act
+    const template = makeSut();
+
+    // Assert
     template.hasResourceProperties('AWS::CodePipeline::Pipeline', {
       Stages: Match.arrayWith([
         Match.objectLike({
@@ -74,3 +79,10 @@ describe('PipelineStack', () => {
     });
   });
 });
+
+const makeSut = () => {
+  const app = new App();
+  const stack = new PipelineStack(app, 'MyTestStack');
+  const template = Template.fromStack(stack);
+  return template;
+};

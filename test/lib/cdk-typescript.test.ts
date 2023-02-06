@@ -12,7 +12,10 @@ jest.mock('cdk-dynamo-table-viewer', () => {
 
 describe('CdkStack', () => {
   it('Should create lambda handlers correctly', () => {
+    // Arrange & Act
     const sut = makeSut()
+
+    // Assert
     const handlerCapture = new Capture();
     sut.resourceCountIs('AWS::Lambda::Function', 2);
     sut.hasResourceProperties('AWS::Lambda::Function', {
@@ -27,8 +30,10 @@ describe('CdkStack', () => {
   });
 
   it('Should create API Gateway correctly', () => {
-    const sut = makeSut();
-  
+    // Arrange & Act
+    const sut = makeSut()
+
+    // Assert
     sut.resourceCountIs('AWS::ApiGateway::Deployment', 1);
     sut.hasResourceProperties('AWS::ApiGateway::RestApi', {
       Name: 'Endpoint',
@@ -40,15 +45,20 @@ describe('CdkStack', () => {
   });
 
   it('Should call TableViewer on class construction', () => {
-    makeSut();
+    // Arrange & Act
+    const sut = makeSut()
+
+    // Assert
     const tableViewerSpy = jest.spyOn(TableViewer, 'TableViewer');
     expect(tableViewerSpy).toHaveBeenCalled();
   });
   
   it('Should add CfnOutput for both app endpoints', () => {
+    // Arrange & Act
     jest.restoreAllMocks()
-    const sut = makeSut();
-  
+    const sut = makeSut()
+
+    // Assert
     sut.findOutputs('GatewayUrl');
     sut.findOutputs('TableViewerUrl');
   });

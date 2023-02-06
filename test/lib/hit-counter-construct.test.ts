@@ -5,13 +5,19 @@ import { HitCounterConstruct } from '../../lib/constructs/hit-counter-construct'
 
 describe('HitCounterConstruct', () => {
   it('Should create DynamoDB Table', () => {
+    // Arrange & Act
     const template = makeSut();
+
+    // Assert
     template.resourceCountIs('AWS::DynamoDB::Table', 1);
   });
 
   it('Should pass environment variables to lambda function', () => {
+    // Arrange & Act
     const template = makeSut();
     const envCapture = new Capture();
+
+    // Assert
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: envCapture
     });
@@ -29,7 +35,10 @@ describe('HitCounterConstruct', () => {
   });
 
   it('Should grant HitCounter function Table read/write access', () => {
+    // Arrange & Act
     const template = makeSut();
+
+    // Assert
     template.hasResourceProperties('AWS::IAM::Policy', {
       PolicyDocument: {
         Statement: Match.arrayWith([
@@ -46,7 +55,10 @@ describe('HitCounterConstruct', () => {
   });
 
   it('Should grant HitCounter function permission to invoke downstream function', () => {
+    // Arrange & Act
     const template = makeSut();
+
+    // Assert
     template.hasResourceProperties('AWS::IAM::Policy', {
       PolicyDocument: {
         Statement: Match.arrayWith([
@@ -72,4 +84,4 @@ const makeSut = () => {
   });
   const template = Template.fromStack(stack);
   return template;
-}
+};
