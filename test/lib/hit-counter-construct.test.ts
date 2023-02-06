@@ -2,6 +2,7 @@ import { Stack } from 'aws-cdk-lib';
 import { Capture, Match, Template } from 'aws-cdk-lib/assertions';
 import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { HitCounterConstruct } from '../../lib/constructs/hit-counter-construct';
+import { aws } from '../awsResources';
 
 describe('HitCounterConstruct', () => {
   it('Should create DynamoDB Table', () => {
@@ -9,7 +10,7 @@ describe('HitCounterConstruct', () => {
     const template = makeSut();
 
     // Assert
-    template.resourceCountIs('AWS::DynamoDB::Table', 1);
+    template.resourceCountIs(aws.dynamoDb.table, 1);
   });
 
   it('Should pass environment variables to lambda function', () => {
@@ -18,7 +19,7 @@ describe('HitCounterConstruct', () => {
     const envCapture = new Capture();
 
     // Assert
-    template.hasResourceProperties('AWS::Lambda::Function', {
+    template.hasResourceProperties(aws.lambda.function, {
       Environment: envCapture
     });
     expect(envCapture.asObject()).toEqual({
@@ -39,7 +40,7 @@ describe('HitCounterConstruct', () => {
     const template = makeSut();
 
     // Assert
-    template.hasResourceProperties('AWS::IAM::Policy', {
+    template.hasResourceProperties(aws.iam.policy, {
       PolicyDocument: {
         Statement: Match.arrayWith([
           Match.objectLike({
@@ -59,7 +60,7 @@ describe('HitCounterConstruct', () => {
     const template = makeSut();
 
     // Assert
-    template.hasResourceProperties('AWS::IAM::Policy', {
+    template.hasResourceProperties(aws.iam.policy, {
       PolicyDocument: {
         Statement: Match.arrayWith([
           Match.objectLike({

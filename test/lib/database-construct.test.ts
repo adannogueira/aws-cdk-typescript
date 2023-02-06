@@ -1,6 +1,7 @@
 import { Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { DatabaseConstruct } from '../../lib/constructs/database-construct';
+import { aws } from '../awsResources';
 
 describe('DatabaseConstruct', () => {
   it('Should be correctly instantiated', () => {
@@ -16,7 +17,7 @@ describe('DatabaseConstruct', () => {
     const { template } = buildResources();
 
     // Assert
-    template.resourceCountIs('AWS::DynamoDB::Table', 1);
+    template.resourceCountIs(aws.dynamoDb.table, 1);
   });
 
   it('Should encrypt DynamoDB table', () => {
@@ -24,7 +25,7 @@ describe('DatabaseConstruct', () => {
     const { template } = buildResources();
 
     // Assert
-    template.hasResourceProperties('AWS::DynamoDB::Table', {
+    template.hasResourceProperties(aws.dynamoDb.table, {
       SSESpecification: { SSEEnabled: true }
     });
   });
@@ -34,7 +35,7 @@ describe('DatabaseConstruct', () => {
     const { template } = buildResources();
 
     // Assert
-    template.hasResource('AWS::DynamoDB::Table', {
+    template.hasResource(aws.dynamoDb.table, {
       DeletionPolicy: 'Delete'
     });
   });

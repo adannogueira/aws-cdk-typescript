@@ -1,6 +1,7 @@
 import { App } from 'aws-cdk-lib';
 import { Capture, Template } from 'aws-cdk-lib/assertions';
 import { CdkTypescriptStack } from '../../lib/stacks/cdk-typescript-stack';
+import { aws } from '../awsResources';
 import * as TableViewer from 'cdk-dynamo-table-viewer';
 jest.mock('cdk-dynamo-table-viewer', () => {
   return {
@@ -17,8 +18,8 @@ describe('CdkStack', () => {
 
     // Assert
     const handlerCapture = new Capture();
-    sut.resourceCountIs('AWS::Lambda::Function', 2);
-    sut.hasResourceProperties('AWS::Lambda::Function', {
+    sut.resourceCountIs(aws.lambda.function, 2);
+    sut.hasResourceProperties(aws.lambda.function, {
       Handler: handlerCapture,
       Timeout: 10,
       MemorySize: 128
@@ -34,11 +35,11 @@ describe('CdkStack', () => {
     const sut = makeSut()
 
     // Assert
-    sut.resourceCountIs('AWS::ApiGateway::Deployment', 1);
-    sut.hasResourceProperties('AWS::ApiGateway::RestApi', {
+    sut.resourceCountIs(aws.apiGateway.deployment, 1);
+    sut.hasResourceProperties(aws.apiGateway.restApi, {
       Name: 'Endpoint',
     });
-    sut.hasResourceProperties('AWS::ApiGateway::Method', {
+    sut.hasResourceProperties(aws.apiGateway.method, {
       HttpMethod: 'ANY',
       Integration: { TimeoutInMillis: 10000 }
     });

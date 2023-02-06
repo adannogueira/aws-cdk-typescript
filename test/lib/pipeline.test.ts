@@ -1,6 +1,7 @@
 import { App } from 'aws-cdk-lib';
 import { Template, Match } from 'aws-cdk-lib/assertions';
 import { PipelineStack } from '../../lib/stacks/pipeline-stack';
+import { aws } from '../awsResources';
 
 describe('PipelineStack', () => {
   it('Should create CodeCommit Repository correctly', () => {
@@ -8,7 +9,7 @@ describe('PipelineStack', () => {
     const template = makeSut();
 
     // Assert
-    template.resourceCountIs('AWS::CodeCommit::Repository', 1);
+    template.resourceCountIs(aws.codeCommit.repository, 1);
   });
 
   it('Should grant permission and create a pipeline correctly', () => {
@@ -16,13 +17,13 @@ describe('PipelineStack', () => {
     const template = makeSut();
 
     // Assert
-    template.resourceCountIs('AWS::CodePipeline::Pipeline', 1);
-    template.hasResourceProperties('AWS::CodeBuild::Project', {
+    template.resourceCountIs(aws.codePipeline.pipeline, 1);
+    template.hasResourceProperties(aws.codeBuild.project, {
       Source: {
         BuildSpec: Match.stringLikeRegexp('npm install -g aws-cdk')
       }
     });
-    template.hasResourceProperties('AWS::IAM::Policy', {
+    template.hasResourceProperties(aws.iam.policy, {
       PolicyDocument: {
         Statement: Match.arrayWith([
           Match.objectLike({
@@ -39,7 +40,7 @@ describe('PipelineStack', () => {
     const template = makeSut();
 
     // Assert
-    template.hasResourceProperties('AWS::CodePipeline::Pipeline', {
+    template.hasResourceProperties(aws.codePipeline.pipeline, {
       Stages: Match.arrayWith([
         Match.objectLike({ Name: 'Deploy' })
       ])
@@ -51,7 +52,7 @@ describe('PipelineStack', () => {
     const template = makeSut();
 
     // Assert
-    template.hasResourceProperties('AWS::CodePipeline::Pipeline', {
+    template.hasResourceProperties(aws.codePipeline.pipeline, {
       Stages: Match.arrayWith([
         Match.objectLike({
           Actions: Match.arrayWith([
@@ -67,7 +68,7 @@ describe('PipelineStack', () => {
     const template = makeSut();
 
     // Assert
-    template.hasResourceProperties('AWS::CodePipeline::Pipeline', {
+    template.hasResourceProperties(aws.codePipeline.pipeline, {
       Stages: Match.arrayWith([
         Match.objectLike({
           Actions: Match.arrayWith([
